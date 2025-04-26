@@ -7,7 +7,7 @@ import DeleteEmployee from "./deleteEmployee";
 import EditEmployee from "./editEmployee";
 import moment from "moment";
 
-function MasterEmployee({ data1, data2 }) {
+function MasterEmployee() {
 
     const [listEmp, setListEmp] = useState([]);
     const [showModal, setShowModal] = useState(false);

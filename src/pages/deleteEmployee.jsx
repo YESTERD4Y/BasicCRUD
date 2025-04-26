@@ -1,4 +1,4 @@
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
+import { addToast, Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
 import axios from "axios";
 import { useState } from "react";
 import { urlEmp } from "../config/urls";
@@ -17,6 +17,12 @@ function DeleteEmployee({ row, showModal, setShowModal , fetchDataEmp }) {
             const response = await axios.delete(`${urlEmp}/${row.ID}`);
             if (response.status === 200) {
                 setShowModal({isOpen: false , row : null});
+                addToast({
+                    title: "ลบข้อมูลสำเร็จ",
+                    description: "ข้อมูลพนักงานถูกลบเรียบร้อยแล้ว",
+                    variant: "solid",
+                    color: "success"
+                });
                 fetchDataEmp();
             }
         }catch(err){

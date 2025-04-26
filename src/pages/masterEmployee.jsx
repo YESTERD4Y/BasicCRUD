@@ -4,12 +4,15 @@ import { urlEmp } from "../config/urls";
 import { useEffect, useState } from "react";
 import AddEmployee from "./addEmployee";
 import DeleteEmployee from "./deleteEmployee";
+import EditEmployee from "./editEmployee";
+import moment from "moment";
 
 function MasterEmployee({ data1, data2 }) {
 
     const [listEmp, setListEmp] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState({isOpen: false , row : null});
+    const [showModalEdit , setShowModalEdit] = useState({isOpen: false , row : null});
     const fetchDataEmp = async () => {
         try {
             const response = await axios.get(urlEmp);
@@ -23,8 +26,11 @@ function MasterEmployee({ data1, data2 }) {
     }
 
     const handleDelete = (row) => {
-        console.log(row)
         setShowModalDelete({isOpen: true , row : row});
+    }
+
+    const handleEdit = (row) => {
+        setShowModalEdit({isOpen: true , row : row});
     }
 
     useEffect(() => {
@@ -35,8 +41,9 @@ function MasterEmployee({ data1, data2 }) {
 
     return (
         <>
-            {showModal && <AddEmployee showModal={showModal} setShowModal={setShowModal} />}
+            {showModal && <AddEmployee showModal={showModal} setShowModal={setShowModal} fetchData={fetchDataEmp} />}
             {showModalDelete.isOpen && <DeleteEmployee row={showModalDelete.row} showModal={showModalDelete.isOpen} fetchDataEmp={fetchDataEmp} setShowModal={setShowModalDelete} />}
+            {showModalEdit.isOpen && <EditEmployee row={showModalEdit.row} showModal={showModalEdit.isOpen} setShowModal={setShowModalEdit} fetchData={fetchDataEmp} />}
             <Card className="w-full h-full container m-auto p-4" shadow="sm">
                 <p className="text-lg font-semibold">CRUD Employee</p>
                 <div className="flex my-4 w-full justify-end items-center">
@@ -66,9 +73,9 @@ function MasterEmployee({ data1, data2 }) {
                                     <TableCell>{item.FIRST_NAME}</TableCell>
                                     <TableCell>{item.LAST_NAME}</TableCell>
                                     <TableCell>{item.DEPARTMENT}</TableCell>
-                                    <TableCell>{item.DATE_OF_BIRTH}</TableCell>
+                                    <TableCell>{moment(item.DATE_OF_BIRTH).format("DD/MM/YYYY")}</TableCell>
                                     <TableCell className="space-x-3">
-                                        <Button variant="solid" size="sm" color="primary">Edit</Button>
+                                        <Button variant="solid" size="sm" color="primary" onPress={() => handleEdit(item)}>Edit</Button>
                                         <Button variant="solid" size="sm" color="danger" onPress={() => handleDelete(item)}>Delete</Button>
                                     </TableCell>
                                 </TableRow>

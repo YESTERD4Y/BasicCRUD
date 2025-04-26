@@ -1,10 +1,10 @@
-import { Button, DatePicker, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner } from "@heroui/react";
+import { addToast, Button, DatePicker, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner } from "@heroui/react";
 import axios from "axios";
 import { useState } from "react";
 import { urlEmp } from "../config/urls";
 
 
-function AddEmployee({ showModal, setShowModal }) {
+function AddEmployee({ showModal, setShowModal , fetchData }) {
     const [f_name, setF_name] = useState("");
     const [l_name, setL_name] = useState("");
     const [department, setDepartment] = useState("");
@@ -23,19 +23,37 @@ function AddEmployee({ showModal, setShowModal }) {
     const handleSave = async () => {
         try {
             setLoading(true);
+
+            if (f_name.trim() === "" || l_name.trim() === "" || department.trim() === "" || birthday === "") {
+                addToast({
+                    title: "ไม่สามารถบันทึกข้อมูลได้",
+                    description: "กรุณากรอกข้อมูลให้ครบถ้วน และ ไม่เป็นค่าว่าง",
+                    variant: "solid",
+                    color: "warning"
+                });
+                return;
+            }
+
             const newEmp = {
                 FIRST_NAME: f_name,
                 LAST_NAME: l_name,
                 DEPARTMENT: department,
-                DATE_OF_BIRTH: birthday
+                DATE_OF_BIRTH: new Date(birthday).toISOString()
             }
             const respone = await axios.post(urlEmp, newEmp);
             if (respone.status === 201) {
+                addToast({
+                    title: "เพิ่มข้อมูลสำเร็จ",
+                    description: "ข้อมูลพนักงานถูกเพิ่มเรียบร้อยแล้ว",
+                    variant: "solid",
+                    color: "success"
+                });
                 setShowModal(false);
                 setF_name("");
                 setL_name("");
                 setDepartment("");
                 setBirthday("");
+                fetchData();
             }
         } catch (error) {
             console.log(error);

@@ -6,7 +6,7 @@ function EditEmployee({ row, showModal, setShowModal }) {
         <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
             <ModalContent>
                 <ModalHeader>
-
+                    <p>แก้ไขข้อมูลพนักงาน {row.FIRST_NAME} {row.LAST_NAME}</p>
                 </ModalHeader>
                 <ModalBody>
 
